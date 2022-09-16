@@ -37,7 +37,7 @@ class UserPolling(ABCPolling):
     async def get_event(self, server: dict) -> dict:
         logger.debug("Making long request to get event with longpoll...")
         return await self.api.http_client.request_json(
-            "https://{}?act=a_check&key={}&ts={}&wait={}&mode={}&rps_delay={}".format(
+            "https://{}?act=a_check&key={}&ts={}&wait={}&mode={}&rps_delay={}&version=3".format(
                 server["server"],
                 server["key"],
                 server["ts"],
