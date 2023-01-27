@@ -72,7 +72,7 @@ elif logging_module == "logging":
         def process(self, msg, args, kwargs):
             log_kwargs = {
                 key: kwargs[key]
-                for key in inspect.getargspec(self.logger._log).args[1:]
+                for key in inspect.getfullargspec(self.logger._log).args[1:]
                 if key in kwargs
             }
             if isinstance(msg, str):
@@ -94,7 +94,7 @@ if hasattr(asyncio, "WindowsProactorEventLoopPolicy") and isinstance(
     https://github.com/aio-libs/aiohttp/issues/4324
 
     This also can be fixed by using loop.run_until_complete instead of asyncio.run
-    but I like to use asyncio.run because it's more readable.
+    but I like to use asyncio.run because it's more readable, and not require to create new event loop.
     """
     from asyncio.proactor_events import _ProactorBasePipeTransport, _ProactorBaseWritePipeTransport
     from functools import wraps

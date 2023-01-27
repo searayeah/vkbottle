@@ -3,7 +3,7 @@ from typing import Any
 import pytest
 
 from vkbottle import API, ABCRequestRescheduler, CaptchaError, CtxStorage, VKAPIError
-from vkbottle.tools.test_utils import with_mocked_api
+from tests.test_utils import with_mocked_api
 
 USERS_GET_RESPONSE = (
     '{"response":[{"first_name":"Павел","id":1,"last_name":"Дуров",'
@@ -71,9 +71,9 @@ async def test_captcha_error_handling(api: API):
 @pytest.mark.asyncio
 @with_mocked_api(None)
 async def test_api_invalid_response(api: API):
-    api.request_rescheduler = MockedRescheduler(None, {"some": "response"})
+    api.request_rescheduler = MockedRescheduler(None, {"response": {"some": "response"}})
     response = await api.request("some.method", {})
-    assert response == {"some": "response"}
+    assert response == {"response": {"some": "response"}}
 
 
 @pytest.mark.asyncio
@@ -106,3 +106,13 @@ async def test_request_many(api: API):
 async def test_types_translator():
     api = API("token")
     assert await api.validate_request({"a": [1, 2, 3, 4, "hi!"]}) == {"a": "1,2,3,4,hi!"}
+
+
+@pytest.mark.asyncio
+@with_mocked_api('{"error": {"error_code": 10, "error_msg": "Internal server error: Unknown error, try later"}}')
+async def test_error_handling_without_request_params(api: API):
+    try:
+        await api.request("some.method", {})
+    except VKAPIError[10]:
+        return True
+    raise AssertionError

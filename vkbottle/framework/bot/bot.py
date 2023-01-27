@@ -87,7 +87,7 @@ class Bot(ABCFramework):
                     self.loop.create_task(self.router.route(update, polling.api))
 
     def run_forever(self) -> NoReturn:  # type: ignore
-        logger.info("Loop will be ran forever")
+        logger.info("Loop will be run forever")
         self.loop_wrapper.add_task(self.run_polling())
         self.loop_wrapper.run_forever(self.loop)
 
@@ -113,7 +113,7 @@ class Bot(ABCFramework):
         return confirmation_code, secret_key
 
     async def process_event(self, event: dict):
-        await self.router.route(event, self.callback.api)
+        await self.router.route(event, self.api)
 
     @property
     def loop(self) -> asyncio.AbstractEventLoop:

@@ -19,7 +19,7 @@ from vkbottle import (
 from vkbottle.bot import BotLabeler, Message
 from vkbottle.dispatch.rules import base
 from vkbottle.tools.dev.mini_types.bot import message_min
-from vkbottle.tools.test_utils import MockedClient, with_mocked_api
+from tests.test_utils import MockedClient, with_mocked_api
 
 EXAMPLE_EVENT = {
     "ts": 1,
@@ -97,7 +97,7 @@ def set_http_callback(api: API, callback: Callable[[str, str, dict], Any]):
     api.http_client = MockedClient(callback=callback)
 
 
-async def test_bot_polling():
+async def test_bot_polling():  # noqa: CCR001
     class TestApi(API):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -118,10 +118,8 @@ async def test_bot_polling():
         elif "!SERVER!" in url:
             return EXAMPLE_EVENT
         elif "messages.send" in url:
-            _r = {**data, **{"r": 1}}
-            if "peer_ids" in data:
-                return {"response": [_r]}
-            return {"response": _r}
+            _r = {**data, "r": 1}
+            return {"response": [_r]} if "peer_ids" in data else {"response": _r}
 
     bot = Bot(api=TestApi("token"))
     set_http_callback(bot.api, callback)
@@ -164,7 +162,7 @@ async def test_bot_scopes():
 
 
 def fake_message(ctx_api: API, **data: Any) -> Message:
-    message = dict(peer_id=1, date=1, from_id=1, text="test", out=0, id=1)
+    message = {"peer_id": 1, "date": 1, "from_id": 1, "text": "test", "out": 0, "id": 1}
     message.update(data)
     return message_min(
         {
@@ -229,7 +227,7 @@ async def test_rules(api: API):
     ]
     assert await base.CommandRule("cmd", ["!", "."], 2).check(
         fake_message(api, text="!cmd test bar")
-    ) == {"args": ("test", "bar")}
+    ) == {"args": ["test", "bar"]}
     assert (
         await base.CommandRule("cmd", ["!", "."], 2).check(fake_message(api, text="cmd test bar"))
         is False
@@ -244,6 +242,15 @@ async def test_rules(api: API):
     assert (
         await base.CommandRule("cmd", ["!", "."], 3).check(fake_message(api, text="cmd test bar"))
         is False
+    )
+
+    assert (
+        await base.CommandRule("cmd", ["!", "."], 0).check(fake_message(api, text="!cmd test bar"))
+        is False
+    )
+
+    assert (
+        await base.CommandRule("cmd", ["!", "."], 0).check(fake_message(api, text="!cmd")) is True
     )
 
     labeler = BotLabeler()

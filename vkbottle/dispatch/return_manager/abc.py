@@ -1,19 +1,41 @@
-from abc import ABC
-from typing import Any, Callable, Coroutine, Dict, NamedTuple, Optional, Tuple, Union
+from abc import ABC, abstractmethod, abstractproperty
+from typing import Any, Awaitable, Callable, Dict, NamedTuple, Optional, Tuple, Union
 
-HandlerProperty = NamedTuple(
-    "HandlerProperty", (("types", Union[type, Tuple[type, ...]]), ("handler", Callable))
-)
+HANDLER_PROPERTY_TYPES = Union[type, Tuple[type, ...]]
 
 
-class BaseReturnManager(ABC):
+class HandlerProperty(NamedTuple):
+    types: HANDLER_PROPERTY_TYPES
+    handler: Callable
+
+
+# TODO: fix types here
+class ABCRetunManager(ABC):
+    @abstractmethod
+    def get_handler(self, value: Any) -> Any:
+        ...
+
+    @abstractproperty
+    def handlers(self) -> Any:
+        ...
+
+    @classmethod
+    @abstractmethod
+    def instance_of(cls, types: Any) -> Any:
+        ...
+
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}>"
+
+
+class BaseReturnManager(ABCRetunManager):
     def get_handler(self, value: Any) -> Optional[Callable]:
         for types, handler in self.handlers.items():
             if isinstance(value, types):
                 return handler
 
     @property
-    def handlers(self) -> Dict[Union[type, Tuple[type, ...]], Callable[[Any], Coroutine]]:
+    def handlers(self) -> Dict[HANDLER_PROPERTY_TYPES, Callable[[Any], Awaitable]]:
         return {
             v.types: v.handler
             for k, v in vars(self.__class__).items()
@@ -28,6 +50,3 @@ class BaseReturnManager(ABC):
             return HandlerProperty(types, func)
 
         return decorator
-
-    def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}>"

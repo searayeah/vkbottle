@@ -1,10 +1,9 @@
-from abc import ABC
 from typing import Optional, Union
 
 Payload = Union[str, dict]
 
 
-class ABCAction(ABC):
+class ABCAction:
     type: str
 
     def get_data(self) -> dict:
@@ -73,10 +72,10 @@ class Callback(ABCAction):
 
 __all__ = (
     "ABCAction",
-    "Text",
-    "OpenLink",
-    "Location",
-    "VKPay",
-    "VKApps",
     "Callback",
+    "Location",
+    "OpenLink",
+    "Text",
+    "VKApps",
+    "VKPay",
 )
