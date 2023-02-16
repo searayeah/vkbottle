@@ -54,8 +54,7 @@ class MentionRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
         if self.mention_only:
             return event.is_mentioned and not event.text
-        else:
-            return event.is_mentioned
+        return event.is_mentioned
 
 
 class CommandRule(ABCRule[BaseMessageMin]):
@@ -182,8 +181,11 @@ class ForwardMessagesRule(ABCRule[BaseMessageMin]):
 
 
 class ReplyMessageRule(ABCRule[BaseMessageMin]):
+    def __init__(self, reply_message: bool = True):
+        self.reply_message = reply_message
+
     async def check(self, event: BaseMessageMin) -> bool:
-        return bool(event.reply_message)
+        return self.reply_message is bool(event.reply_message)
 
 
 class GeoRule(ABCRule[BaseMessageMin]):
