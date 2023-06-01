@@ -42,7 +42,7 @@ class APIRequest(NamedTuple):
 
 class API(ABCAPI):
     """Default API instance
-    Documentation: https://github.com/vkbottle/vkbottle/blob/master/docs/low-level/api/api.md
+    Documentation: https://vkbottle.rtfd.io/ru/latest/low-level/api
     """
 
     API_URL = vkbottle_types.API_URL
@@ -88,8 +88,8 @@ class API(ABCAPI):
                 response = await self.http_client.request_json(
                     self.API_URL + method,
                     method="POST",
-                    data=data,  # noqa
-                    params={"access_token": token, "v": self.API_VERSION},  # noqa
+                    data=data,
+                    params={"access_token": token, "v": self.API_VERSION},
                 )
             logger.debug("Request {} with {} data returned {}", method, data, response)
             yield await self.validate_response(method, data, response)  # type: ignore

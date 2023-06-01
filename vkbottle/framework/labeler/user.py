@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from vkbottle_types.events import BaseUserEvent
 
     from vkbottle.dispatch.views.user import ABCUserMessageView
-    from vkbottle.tools.dev.mini_types.user import MessageMin
+    from vkbottle.tools.mini_types.user import MessageMin
 
     from .abc import LabeledHandler
 
@@ -73,10 +73,11 @@ class UserLabeler(BaseLabeler):
         blocking: bool = True,
         **custom_rules,
     ) -> "LabeledHandler":
-        assert all(isinstance(rule, ABCRule) for rule in rules), (
-            "All rules must be subclasses of ABCRule or rule shortcuts "
-            "(https://vkbottle.readthedocs.io/ru/latest/high-level/routing/rules/)"
-        )
+        if any(not isinstance(rule, ABCRule) for rule in rules):
+            raise ValueError(
+                "All rules must be subclasses of ABCRule or rule shortcuts "
+                "(https://vkbottle.rtfd.io/ru/latest/high-level/handling/rules/)"
+            )
 
         event_types = [event] if isinstance(event, (int, UserEventType)) else event
 

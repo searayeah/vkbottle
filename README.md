@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/vkbottle/vkbottle">
-    <img src="https://raw.githubusercontent.com/vkbottle/vkbottle/master/docs/logo.svg" width="175px" style="display: inline-block; border-radius: 5px">
+    <img width="150px" height="150px" alt="VKBottle" src="https://raw.githubusercontent.com/vkbottle/vkbottle/master/docs/logo.svg">
   </a>
 </p>
 <h1 align="center">
@@ -10,7 +10,7 @@
     <em><b>Кастомизируемый, быстрый и удобный фреймворк для работы с VK API</b></em>
 </p>
 <p align="center">
-  <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/vkbottle/vkbottle/ci.yml">
+  <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/vkbottle/vkbottle/push-build.yml">
   <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dw/vkbottle">
   <img alt="GitHub issues by-label" src="https://img.shields.io/github/issues/vkbottle/vkbottle/bug">
   <img alt="PyPI" src="https://img.shields.io/pypi/v/vkbottle?color=green&label=PyPI">
@@ -34,8 +34,8 @@ bot.run_forever()
 
 ## Документация
 
-[Туториал для новичков](https://vkbottle.readthedocs.io/ru/latest/tutorial/)\
-[Техническая документация](https://vkbottle.readthedocs.io/ru/latest)
+[Туториал для новичков](https://vkbottle.rtfd.io/ru/latest/tutorial/)\
+[Техническая документация](https://vkbottle.rtfd.io/ru/latest)
 
 ## Установка
 
@@ -53,7 +53,7 @@ pip install vkbottle
 ## Contributing
 
 ПР поддерживаются! Перед созданием пулл реквеста ознакомьтесь с [CONTRIBUTION_GUIDE](CONTRIBUTION_GUIDE.md). Нам приятно видеть ваш вклад в развитие фреймворка.\
-Задавайте вопросы в блоке Issues или в [**чате Telegram**](https://t.me/vkbottle_ru) / [**чате VK**](https://vk.me/join/AJQ1d7fBUBM_800lhEe_AwJj)!
+Задавайте вопросы в блоке Issues или в [**чате Telegram**](https://t.me/vkbottle_ru)!
 
 - Создатель [@timoniq](https://github.com/timoniq)
 - Мейнтейнер [@FeeeeK](https://github.com/FeeeeK)

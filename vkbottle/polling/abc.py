@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class ABCPolling(ABC):
     """Abstract Polling class
-    Documentation: https://github.com/vkbottle/vkbottle/blob/master/docs/low-level/polling/polling.md
+    Documentation: https://vkbottle.rtfd.io/ru/latest/low-level/polling
     """
 
     @abstractmethod
@@ -28,7 +28,7 @@ class ABCPolling(ABC):
     def api(self) -> "ABCAPI":
         pass
 
-    @api.setter  # noqa: B027
+    @api.setter
     def api(self, new_api: "ABCAPI"):  # noqa: B027
         pass
 

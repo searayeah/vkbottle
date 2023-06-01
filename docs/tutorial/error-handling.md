@@ -4,12 +4,12 @@
 
 ## try ... except VKAPIError
 
-Для начала разъясним что такое `VKAPIError`, это подтип `CodeException`, особенность которого заключается в том, чтобы ошибка идентифицировалась в except и без указанного кода (`try except VKAPIError`) и при указании кода (`try except VKAPIError[code]`)
+Для начала разъясним что такое `VKAPIError`, это подтип `CodeException`, особенность которого заключается в том, чтобы ошибка идентифицировалась в except и без указанного кода (`#!python except VKAPIError`) и при указании кода (`#!python except VKAPIError[code]`)
 
 В `VKAPIError` есть два поля:
 
 * `code` - код ошибки, int
-* `description` - описание ошибки, str
+* `error_msg` - описание ошибки, str
 
 Чтобы использовать `VKAPIError` нужно импортировать его:
 
@@ -43,7 +43,7 @@ try:
 except VKAPIError[902] as e:
     print("не могу отправить сообщение из-за настроек приватности")
 except VKAPIError as e:
-    print("не могу отправить:", e.error_description)
+    print("не могу отправить:", e.error_msg)
 ```
 
 ## Специфичные ошибки
@@ -51,8 +51,8 @@ except VKAPIError as e:
 Некоторые ошибки vk имеют дополнительные поля, которые могут понадобиться вам для их обработки:
 
 * `CaptchaError`:
-    * `sid` - идентификатор captcha, int
-    * `img` - ссылка на изображение, str
+    * `captcha_sid` - идентификатор captcha, int
+    * `captcha_img` - ссылка на изображение, str
 
 ## ErrorHandler
 
@@ -106,6 +106,6 @@ async def limit_reached_write_handler(e: VKAPIError):
     print("ой, слишком много запросов", e)
 ```
 
-Ещё у `ErrorHandler` есть параметр `redirect_arguments: bool`, который позволяет передавать в хендлер аргументы из задекорированной с помощью `catch` функции. В связке с ботом позволяет передать в хендлер контекстные аргументы из правил и мидлварей.
+Ещё у `ErrorHandler` есть параметр `#!python redirect_arguments: bool`, который позволяет передавать в хендлер аргументы из задекорированной с помощью `catch` функции. В связке с ботом позволяет передать в хендлер контекстные аргументы из правил и мидлварей.
 
 Подробнее про `ErrorHandler.catch` можно почитать [здесь](../low-level/exception_handling/error-handler.md)

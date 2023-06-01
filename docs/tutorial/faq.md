@@ -82,8 +82,8 @@ IO [(Input/Output)](https://en.wikipedia.org/wiki/Input/output).
 Конечно, интерпретатор Python не запрещает использовать синхронные решения в программировании асинхронных,
 но в этом нет смысла, так как пропадают все преимущества асинхронности.
 
-Самые частые проблемы блокировок происходят из-за функций то типу `time.sleep()`.
-В **async** функциях используйте `asyncio.sleep()`.
+Самые частые проблемы блокировок происходят из-за функций то типу `#!python time.sleep()`.
+В **async** функциях используйте `#!python asyncio.sleep()`.
 
 ```python
 # bad
@@ -99,7 +99,7 @@ await asyncio.sleep(10)
 и ему производные API-обёртки (**vk_api**, и тп).
 
 Они хороши для **неасинхронного** программирования, но могут произойти ситуации, когда запрос и ответ с сервера
-может идти долго и бот из за этого зависнет. Используйте для этого модуль
+может идти долго и бот из-за этого зависнет. Используйте для этого модуль
 [aiohttp](https://docs.aiohttp.org/en/stable/client_quickstart.html),
 он идёт зависимостью в vkbottle или используйте встроенный AiohttpClient.
 
@@ -114,7 +114,7 @@ async def send_httpbin_get() -> dict:
 
 ```python
 # good, recommended
-# see https://vkbottle.readthedocs.io/ru/latest/low-level/http/http-client/
+# see https://vkbottle.rtfd.io/ru/latest/low-level/http-client/
 from vkbottle.http import AiohttpClient
 
 

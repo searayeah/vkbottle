@@ -1,9 +1,9 @@
 import asyncio
-from typing import TYPE_CHECKING, AsyncIterator, Optional
+from typing import TYPE_CHECKING, AsyncGenerator, Optional
 
 from aiohttp.client_exceptions import ClientConnectionError
 
-from vkbottle.exception_factory import ErrorHandler
+from vkbottle.exception_factory import ErrorHandler, VKAPIError
 from vkbottle.modules import logger
 
 from .abc import ABCPolling
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class UserPolling(ABCPolling):
     """User Polling class
-    Documentation: https://github.com/vkbottle/vkbottle/blob/master/docs/low-level/polling/polling.md
+    Documentation: https://vkbottle.rtfd.io/ru/latest/low-level/polling
     """
 
     def __init__(
@@ -56,19 +56,25 @@ class UserPolling(ABCPolling):
             self.user_id = (await self.api.request("users.get", {}))["response"][0]["id"]
         return (await self.api.request("messages.getLongPollServer", {}))["response"]
 
-    async def listen(self) -> AsyncIterator[dict]:  # type: ignore
+    async def listen(self) -> AsyncGenerator[dict, None]:
+        retry_count = 0
         server = await self.get_server()
         logger.debug("Starting listening to longpoll")
         while not self.stop:
             try:
+                if not server:
+                    server = await self.get_server()
                 event = await self.get_event(server)
                 if not event.get("ts"):
                     server = await self.get_server()
                     continue
                 server["ts"] = event["ts"]
+                retry_count = 0
                 yield event
-            except (ClientConnectionError, asyncio.TimeoutError):
-                server = await self.get_server()
+            except (ClientConnectionError, asyncio.TimeoutError, VKAPIError[10]):
+                logger.error("Unable to make request to Longpoll, retrying...")
+                await asyncio.sleep(0.1 * retry_count)
+                server = {}
             except Exception as e:
                 await self.error_handler.handle(e)
 
